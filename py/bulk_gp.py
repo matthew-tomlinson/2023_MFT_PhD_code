@@ -648,11 +648,12 @@ def bulk_fit(x, p, u, dist=None, df_0=None, nc_0=None, bound=None, opt_method=No
     if opt_method == 'load':
         loc, scale, df, nc = bulk_parameters(p=p, u=u, dist=dist, df=df_0, nc=nc_0, bound=bound)
         log_L = -dev_fun(param=param_0)/2
+        opt_timer = misc_fns.timer(reset_start=True)
     
     else:
         if dist=="norm":
             fitted_success=None
-            SLSQP_timer = misc_fns.timer(reset_start=True)
+            opt_timer = misc_fns.timer(reset_start=True)
             loc, scale, df, nc = bulk_parameters(p=p, u=u, dist=dist, bound=bound)
             log_L = -bulk_norm_dev(x, p, u, train_bulk_bool, bound=bound)/2
         else:
@@ -660,10 +661,10 @@ def bulk_fit(x, p, u, dist=None, df_0=None, nc_0=None, bound=None, opt_method=No
             
 
 
-            SLSQP_timer = misc_fns.timer()
+            opt_timer = misc_fns.timer()
             res = scipy.optimize.minimize(dev_fun, x0=param_0, method=opt_method,
                                             bounds=scipy.optimize.Bounds(lb=nct_bounds_lb, ub=nct_bounds_ub))
-            SLSQP_timer.stop()
+            opt_timer.stop()
 
             if dist=="t":
                 loc, scale, df, nc = bulk_parameters(p=p, u=u, dist=dist, df=res.x[0], bound=bound)
@@ -703,8 +704,9 @@ def bulk_fit(x, p, u, dist=None, df_0=None, nc_0=None, bound=None, opt_method=No
                                 'se': {'df': se[0], 'nc': se[1]},
                             },
                     'res':  {
+                                'opt_method': opt_method,
                                 'log_L': log_L,
-                                'SLSQP_time': SLSQP_timer.get_timer_dict(),
+                                'opt_timer': opt_timer.get_timer_dict(),
                                 'res': res,
                             },
                     'res_t':  {

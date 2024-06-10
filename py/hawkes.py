@@ -4267,8 +4267,9 @@ class hawkes_bulk():
   
     def calc_opt_dict(self):
         hb_dict =   {
+                        "opt_method_H_B": self._bdist._bulk_fit['res']['opt_method'],
                         "log_L_H_B": self._bdist._bulk_fit['res']['log_L'],
-                        **{f"opt_{t}": self._bdist._bulk_fit['res']['opt_time'][t] for t in self._bdist._bulk_fit['res']['opt_time']}
+                        **{f"opt_{t}_H_B": self._bdist._bulk_fit['res']['opt_timer'][t] for t in self._bdist._bulk_fit['res']['opt_timer']}
                     }
         return hb_dict
 

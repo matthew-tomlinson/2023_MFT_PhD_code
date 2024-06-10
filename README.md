@@ -23,24 +23,31 @@ Core
     --------
     # .py Python scripts of core library.
 
+    settings
+    --------
+    # Master settings for programs run in 'notebooks'.
 
 
 Input
-
 
     data
     --------
     # .csv files of historic daily log returns data sourced from 'stooq.com'.
 
 
-
-
 Output
 
-    figures
+    exports
     --------
-    # Figures generated from 'T23_thesis' notebooks.
+        # Figures and tables generated from 'T23_thesis' notebooks for inclusion in LaTeX documents.
 
+        figures
+        --------
+        # .pdf and .png figures generated from 'T23_thesis' notebooks.
+
+        tables
+        --------
+        # .sty files for LaTeX-formatted tables generated from 'T23_thesis' notebooks.
 
     results
     --------
@@ -52,14 +59,7 @@ Output
 
         vares
         ----
-        # Results of 
-
-
-    tables
-    --------
-    # .sty files for LaTeX-formatted tables generated from 'T23_thesis' notebooks.
-
-
+        # Results of conditional quantile (VaR) and conditional violation expectation (ES) analysis.
 
 
 =====================================================================================================

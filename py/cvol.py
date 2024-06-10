@@ -917,7 +917,7 @@ class cvol():
     def calc_fit_cv_evt_meta(self):
 
         return {
-                        **misc_fns.dict_key_rm(self._stats_res['cv'], key_rm='a_u'),
+                        **misc_fns.dict_key_rm(self._stats_res['cv'], keys_rm='a_u'),
                         **{'a_u': self._evt_a_u},
                 }
 

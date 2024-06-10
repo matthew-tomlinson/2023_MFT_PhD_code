@@ -17,6 +17,309 @@ import greek_roman as GR
 #import plot_functions as plot_fns
 
 
+class fstmp():
+
+    def __init__(self, 
+                 root=None, title=None, fnsubs=None,
+                 dpi=None, thesis=None, an_mode=None
+                 ):
+        
+        self.set_root(root=root, reset=True)
+        self.set_title(title=title, reset=True)
+        self.set_fnsubs(fnsubs=fnsubs, reset=True)
+
+        self.set_dpi(dpi=dpi, reset=True)
+        self.set_thesis(thesis=thesis, reset=True)
+        self.set_an_mode(mode=an_mode, reset=True)
+
+        
+
+    def set_root(self, root=None, reset=None):
+
+        if reset is None:
+            reset = False
+
+        if root is not None:
+            self._root = root
+        elif reset:
+            self._root = './'
+
+    def get_root(self):
+        return self._root
+
+
+    def calc_root(self, root=None, mkdir=None):
+
+        self.set_root(root=root, reset=False)
+
+        return calc_root(root=self.get_root(), mkdir=mkdir)
+    
+        
+    def set_title(self, title=None, reset=None):
+
+        if reset is None:
+            reset = False
+
+        if title is not None:
+            self._title = title
+        elif reset:
+            self._title = self.calc_title_default()
+
+    def get_title(self):
+        return self._title
+    
+    def set_fnsubs(self, fnsubs=None, reset=None):
+
+        if reset is None:
+            reset = False
+        if fnsubs is not None:
+            self._fnsubs = misc_fns.make_iterable_array(fnsubs)
+        elif reset:
+            self._fnsubs = self.calc_fnsubs_default()
+
+    def get_fnsubs(self):
+        return self._fnsubs
+    
+    
+
+    def set_dpi(self, dpi=None, reset=None):
+        if reset is None:
+            reset = False
+        if dpi is not None:
+            self._dpi = dpi
+        elif reset:
+            self._dpi = self.calc_dpi_default()
+
+    def get_dpi(self, dpi=None):
+        self.set_dpi(dpi=dpi)
+        return self._dpi
+    
+
+    def set_thesis(self, thesis=None, reset=None):
+        if reset is None:
+            reset = False
+        if thesis is not None:
+            self._thesis = thesis
+        elif reset:
+            self._thesis = self.calc_thesis_default()
+
+    def get_thesis(self, thesis=None):
+        self.set_thesis(thesis=thesis)
+        return self._thesis
+    
+
+
+    def set_an_mode(self, mode=None, reset=None):
+        if reset is None:
+            reset = False
+        if mode is not None:
+            self._an_mode = mode
+        elif reset:
+            self._an_mode = self.calc_an_mode_default()
+
+    def get_an_mode(self, mode=None):
+        self.set_an_mode(mode=mode)
+        return self._an_mode
+    
+
+
+
+    def calc_subdir(self, subs=None, field=None, postsubs=None, app_field=None, root=None, mkdir=None, app_fn=None):
+
+        if app_fn is None:
+            app_fn = True
+
+        root = self.calc_root(root=root, mkdir=mkdir)
+
+        if postsubs is None:
+            postsubs = []
+        postsubs = misc_fns.make_iterable_array(postsubs)
+
+        if app_fn:
+            postsubs = np.concatenate([self.get_fnsubs(), postsubs])
+
+
+        return calc_subdir(subs=subs, field=field, postsubs=postsubs, app_field=app_field, root=root, mkdir=mkdir)
+
+
+    def calc_dir(self, dir=None, subs=None, field=None, postsubs=None, app_field=None, root=None, mkdir=None, app_fn=None):
+
+        if mkdir is None:
+            mkdir = True
+
+        if dir is None:
+            dir = self.calc_subdir(subs=subs, field=field, postsubs=postsubs, app_field=app_field, root=root, mkdir=mkdir, app_fn=app_fn)
+        else:
+            dir = mkdir_export(dir, mkdir=mkdir)
+
+        return dir
+
+
+    def calc_write_address(self, dir=None, subs=None, root=None, mkdir=None, app_fn=None, file_nm=None, file_ext=None):
+
+        dir = self.calc_dir(dir=dir, subs=subs, root=root, mkdir=mkdir, app_fn=app_fn)
+
+        return calc_write_address(dir=dir, mkdir=False, file_nm=file_nm, file_ext=file_ext)
+
+
+    def print_str_pw(self, print_str=None, do_print=None, do_write=None, write_mode=None, write_address=None, 
+                    dir=None, subs=None, field=None, postsubs=None, app_field=None, root=None, mkdir=None, app_fn=None,
+                    file_nm=None, file_ext=None):
+        
+        if field is None:
+            field = ['exports', 'tables']
+
+        dir = self.calc_dir(dir=dir, subs=subs, field=field, postsubs=postsubs, app_field=app_field, root=root, mkdir=mkdir, app_fn=app_fn)
+
+        return print_str_pw(print_str=print_str, do_print=do_print, do_write=do_write, write_mode=write_mode, write_address=write_address, 
+                                    dir=dir, mkdir=False,  file_nm=file_nm, file_ext=file_ext)
+
+
+
+    def fig_export(self, fig, height=None, width=None, 
+                dir=None, subs=None, field=None, postsubs=None, app_field=None, root=None, mkdir=None, app_fn=None,
+                thesis=None, formats=None, dpi=None):
+
+        if field is None:
+            field = ['exports', 'figures']
+
+        dir = self.calc_dir(dir=dir, subs=subs, field=field, postsubs=postsubs, app_field=app_field, root=root, mkdir=mkdir, app_fn=app_fn)
+
+        fig_export(fig=fig, height=height, width=width, dir=dir, mkdir=False, formats=formats, dpi=self.get_dpi(dpi=dpi), thesis=self.get_thesis(thesis=thesis))
+
+
+    def calc_title_default(self):
+        return 'Title'
+    
+    def calc_fnsubs_default(self):
+        title = self.get_title()
+        use_title=True
+        if title is None:
+            use_title=False
+        elif title=='':
+            use_title==False
+
+        if use_title:
+            fnsubs_default = title
+        else:
+            fnsubs_default = []
+
+        return misc_fns.make_iterable_array(fnsubs_default)
+        
+    def calc_dpi_default(self):
+        return 300
+    def calc_thesis_default(self):
+        return False
+    def calc_an_mode_default(self):
+        return ''
+
+
+class Cfstmp(fstmp):
+
+        
+    def __init__(self, 
+            root=None, title=None, fnsubs=None,
+            dpi=None, thesis=None, an_mode=None,
+            matter=None, n=None, n_post=None, initchr=None
+            ):
+        
+
+        
+        self.set_matter(matter=matter, reset=True)
+        self.set_n(n=n, reset=True)
+        self.set_n_post(n_post=n_post, reset=True)
+        self.set_initchr(initchr=initchr, reset=True)
+
+        super().__init__(root=root, title=title, fnsubs=fnsubs,
+                                dpi=dpi, thesis=thesis, an_mode=an_mode)
+        
+
+
+    
+    
+    def set_matter(self, matter=None, reset=None):
+
+        if reset is None:
+            reset = False
+
+        if matter is not None:
+            self._matter = matter
+        elif reset:
+            self._matter = 'm'
+
+    
+    def set_n(self, n=None, reset=None):
+
+        if reset is None:
+            reset = False
+
+        if n is not None:
+            self._n = n
+        elif reset:
+            self._n = 1
+
+
+    def set_n_post(self, n_post=None, reset=None):
+
+        if reset is None:
+            reset = False
+
+        if n_post is not None:
+            self._n_post = n_post
+        elif reset:
+            self._n_post = ':'
+
+    def set_initchr(self, initchr=None, reset=None):
+
+        if reset is None:
+            reset = False
+
+        if initchr is not None:
+            self._initchar = initchr
+        elif reset:
+            self._initchar = 'A'
+
+
+    
+    def get_matter(self):
+        return self._matter
+    def get_n(self):
+        return self._n
+    def get_n_post(self):
+        return self._n_post
+    def get_initchr(self):
+        return self._initchar
+    
+    def calc_C_str(self, C_str_nl_pre=None, C_str_matter=None, C_str_n=None, C_str_l=None, C_str_n_post=None, C_str_l_post=None, C_str_initchr=None):
+
+        if C_str_matter is None:
+            C_str_matter = self.get_matter()
+        if C_str_n is None:
+            C_str_n = self.get_n()
+        if C_str_n_post is None:
+            C_str_n_post = self.get_n_post()
+        if C_str_initchr is None:
+            C_str_initchr = self.get_initchr()
+
+        return calc_C_str(C_str_nl_pre=C_str_nl_pre, C_str_matter=C_str_matter, C_str_n=C_str_n, C_str_l=C_str_l, C_str_n_post=C_str_n_post, C_str_l_post=C_str_l_post, C_str_initchr=C_str_initchr)
+
+
+    def calc_fnsubs_default(self):
+
+        title = self.get_title()
+        use_title=True
+        if title is None:
+            use_title=False
+        elif title=='':
+            use_title==False
+
+        if use_title:
+            fnsubs_default = [title, self.calc_C_str(C_str_n_post='')['n']]
+        else:
+            fnsubs_default = [self.calc_C_str(C_str_n_post='')['n']]
+
+        return misc_fns.make_iterable_array(fnsubs_default)
+    
 
 
 #============

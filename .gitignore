@@ -1,4 +1,3 @@
-./original_papers_notes/*
 ./vscode/*
 *.csv
 *.xlsx
@@ -11,6 +10,7 @@
 *.aux
 *.bak
 *.bbl
+*.bib
 *.blg
 *.log
 *.out
@@ -18,8 +18,6 @@
 *.gz
 *.bat
 *.xml
-*blx.bib
-*Notes.bib
 *.txt
 *.sty
 *.html

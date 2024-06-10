@@ -2083,6 +2083,19 @@ def dict_key_rm(dic, keys=None, keys_in=None, keys_rm=None, None_rm=None, ret=No
                 return ret_dict
             
 
+def dict_collapse(d=None, subdictkeys=None):
+
+    if d is None:
+        d = dict()
+
+    if subdictkeys is None:
+        subdictkeys = []
+    subdictkeys = make_iterable_array(subdictkeys)
+
+    return {**dict_key_rm(d, keys_rm=subdictkeys), **{b: d[a][b] for a in subdictkeys for b in d[a]}}
+
+
+
 
 
 def dict_pre_suff(dic, pre=None, suff=None):
